@@ -2,6 +2,7 @@ const express = require('express');
 const {check} = require('express-validator');
 const authController = require('./../controllers/auth');
 const User = require('./../models/user');
+const isAuth = require('./../middleware/auth');
 
 const router = express.Router();
 
@@ -28,6 +29,8 @@ router.put('/signup', [
     .not()
     .isEmpty(),
 ], authController.signup);
+
+router.get('/status', isAuth, authController.getUserStatus);
 
 router.post('/login', authController.login);
 

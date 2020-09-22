@@ -8,6 +8,7 @@ dotenv.config();
 
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
+
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -52,7 +53,12 @@ app.use((error, req, res, next) => {
 });
 mongoose.connect(process.env.MONGODB_URI)
   .then(response => {
-    app.listen(8080);
+    const server = app.listen(8080);
+
+    const io = require('./socket').init(server);
+    io.on('connection', socket => {
+      console.log('Client connected');
+    });
   })
   .catch(error => {
     console.log(error);
